@@ -59,7 +59,7 @@ aws-vpc-terraform/
 │── README.md
 ```
 
-## Architecture Diagram
+## Flowchart Logic Diagram
 
 ![AWS VPC Architecture Diagram](/assets/aws_vpc_infra.png)
 

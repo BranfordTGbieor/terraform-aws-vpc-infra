@@ -1,23 +1,20 @@
-# AWS VPC Terraform Mini Project
+# AWS VPC Infrastructure with Terraform
 
-## Project Overview
+This project provides a modular and reusable Terraform configuration for creating a production-grade AWS VPC infrastructure with public and private subnets, NAT Gateway, and EC2 instances.
 
-This Terraform project provisions an **AWS Virtual Private Cloud (VPC)** with a high-availability architecture, featuring **public and private subnets across two availability zones (AZs)**. The setup ensures that resources in private subnets can access the internet securely via a **NAT Gateway**, while resources in public subnets have direct internet access through an **Internet Gateway**.
+## Architecture
 
-## Features
+The infrastructure includes:
+- VPC with public and private subnets across multiple availability zones
+- Internet Gateway for public subnet connectivity
+- NAT Gateway for private subnet internet access
+- Security groups for EC2 instances
+- Route tables for subnet routing
+- EC2 instances in both public and private subnets
 
-- **Highly Available VPC** with **4 subnets**
-  - 2 Public Subnets (in different AZs)
-  - 2 Private Subnets (in different AZs)
-- **Internet Gateway (IGW)** for public internet access
-- **NAT Gateway (NGW)** for secure outbound traffic from private subnets
-- **Elastic IP (EIP)** for the NAT Gateway
-- **Route Tables** with proper subnet associations
-- **Security Groups** for controlled traffic flow
-- **Optional VPC Endpoint for S3** to optimize data transfer from private instances
-- **EC2 Instances** for testing purposes (1 Public, 1 Private)
+![Architecture Diagram](assets/architectural_diagram.png)
 
-## Directory Structure
+## Project Structure
 
 ```
 aws-vpc-terraform/
@@ -41,85 +38,180 @@ aws-vpc-terraform/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│
-│── envs/
-│   ├── dev/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── terraform.tfvars
-│   │   ├── backend.tf
 │   │
-│   ├── prod/
+│   ├── ec2/
 │   │   ├── main.tf
 │   │   ├── variables.tf
-│   │   ├── terraform.tfvars
-│   │   ├── backend.tf
-│
+│   │   ├── outputs.tf
+│   │
+│── assets/
+│   └── architectural_diagram.png
 │── scripts/
+│   └── diagram.py
+│── main.tf
+│── variables.tf
+│── outputs.tf
+│── terraform.tfvars
+│── backend.tf
 │── README.md
 ```
 
-## Flowchart Logic Diagram
+## Prerequisites
 
-![AWS VPC Architecture Diagram](/assets/aws_vpc_infra.png)
+- Terraform >= 1.0.0
+- AWS CLI configured with appropriate credentials
+- Python 3.x (for diagram generation)
 
-## Deployment Steps
+## Features
 
-### 1. Prerequisites
+- **Modular Design**: Each AWS component is encapsulated in its own module
+- **High Availability**: Resources distributed across multiple availability zones
+- **Security Best Practices**: 
+  - Private subnets for sensitive resources
+  - NAT Gateway for controlled internet access
+  - Security groups with minimal required access
+- **Cost Optimization**:
+  - Single NAT Gateway for private subnets
+  - Configurable instance types
+  - Optional public IP association
+- **Maintainability**:
+  - Consistent naming convention
+  - Comprehensive tagging
+  - Reusable modules
 
-Ensure you have:
+## Configuration
 
-- AWS CLI installed and configured
-- Terraform 0.13+ installed
-- Proper IAM permissions for creating VPC and related resources
+### Required Variables
 
-### 2. Clone the Repository
+```hcl
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+}
 
+variable "vpc_cidr" {
+  description = "CIDR block for VPC"
+  type        = string
+}
+
+variable "vpc_name" {
+  description = "Name of the VPC"
+  type        = string
+}
+
+variable "public_subnet_cidrs" {
+  description = "CIDR blocks for public subnets"
+  type        = list(string)
+}
+
+variable "private_subnet_cidrs" {
+  description = "CIDR blocks for private subnets"
+  type        = list(string)
+}
+
+variable "availability_zones" {
+  description = "Availability zones"
+  type        = list(string)
+}
 ```
-git clone https://github.com/your-repo/aws-vpc-terraform.git
-cd aws-vpc-terraform
+
+### Optional Variables
+
+```hcl
+variable "ami_id" {
+  description = "AMI ID for EC2 instances"
+  type        = string
+  default     = ""
+}
+
+variable "instance_type" {
+  description = "Instance type for EC2 instances"
+  type        = string
+  default     = "t2.micro"
+}
+
+variable "associate_public_ip_address" {
+  description = "Whether to associate public IP with private instances"
+  type        = bool
+  default     = false
+}
+
+variable "common_tags" {
+  description = "Common tags for all resources"
+  type        = map(string)
+  default     = {}
+}
 ```
 
-### 3. Initialize Terraform
+## Deployment
 
-```
-terraform init
-```
+1. Initialize Terraform:
+   ```bash
+   terraform init
+   ```
 
-### 4. Plan Infrastructure Changes
+2. Review the planned changes:
+   ```bash
+   terraform plan
+   ```
 
-```
-terraform plan
-```
+3. Apply the configuration:
+   ```bash
+   terraform apply
+   ```
 
-### 5. Apply Terraform Configuration
+## Outputs
 
-```
-terraform apply -auto-approve
-```
+The configuration provides the following outputs:
+- VPC ID
+- Public and private subnet IDs
+- NAT Gateway ID
+- Security group IDs
+- EC2 instance IDs and public IPs
 
-### 6. Verify Resources
+## Best Practices
 
-```
-aws ec2 describe-vpcs --filters "Name=tag:Name,Values=my-vpc"
-```
+1. **State Management**:
+   - Use remote state storage
+   - Enable state locking
+   - Implement state file encryption
+
+2. **Security**:
+   - Use private subnets for sensitive resources
+   - Implement least privilege security groups
+   - Enable VPC flow logs
+   - Use AWS KMS for encryption
+
+3. **Cost Management**:
+   - Monitor NAT Gateway costs
+   - Use appropriate instance types
+   - Implement auto-scaling where needed
+
+4. **Maintenance**:
+   - Regular security updates
+   - Cost optimization reviews
+   - Performance monitoring
 
 ## Cleanup
 
-To destroy all resources:
-
+To destroy the infrastructure:
+```bash
+terraform destroy
 ```
-terraform destroy -auto-approve
-```
 
-## Best Practices Followed
+## Contributing
 
-- **Modular Terraform Code** for scalability and reuse
-- **Remote State Management** using **S3 & DynamoDB (backend.tf)**
-- **Least Privilege Access Control** via IAM roles & Security Groups
-- **Multi-AZ Architecture** for high availability
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
----
+## License
 
-This setup provides a robust **AWS VPC infrastructure** suitable for hosting applications with proper security, routing, and high availability considerations. 🚀
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please open an issue in the GitHub repository.
 

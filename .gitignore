@@ -17,3 +17,7 @@ override.tf.json
 *.key
 *.crt
 *.env
+
+# Util files
+todo.txt
+venv/

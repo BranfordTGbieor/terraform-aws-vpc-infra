@@ -1,0 +1,51 @@
+digraph "AWS Architecture" {
+	graph [fontcolor="#2D3436" fontname="Sans-Serif" fontsize=15 label="AWS Architecture" nodesep=0.60 pad=2.0 rankdir=RL ranksep=0.75 splines=ortho]
+	node [fixedsize=true fontcolor="#2D3436" fontname="sans-serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=rect style=rounded width=1.4]
+	edge [color="#7B8894"]
+	"19c299513302433b80b0a6e3df1defbc" [label="data.aws_ami.latest_amazon_linux" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	c62d0441523a419eb11c9c62e63a441d [label="aws_instance.private_instance" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	"9fb2c0d1fdf54e41baa91d938f6ea2a6" [label="aws_instance.public_instance" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	"5d7d48cd5b884cc08e2d896256c1fe10" [label="aws_route_table.private" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	df95292b66394183827eb4d152177c43 [label="aws_route_table.public" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	ccf4deecb5694a4a9d1c265c3dd1941c [label="aws_route_table_association.private" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	be1577eb46e24a4ea953e57fbe88d8c1 [label="aws_route_table_association.public" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	subgraph "cluster_module.nat_gateway" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="module.nat_gateway" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		c883985b9e7144508b0007093129f7c1 [label="aws_eip.nat_eip" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+		"763dff426ce64f2c96419ea51194b417" [label="aws_nat_gateway.this" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	}
+	subgraph "cluster_module.security_groups" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="module.security_groups" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"5730d8a09f8b46bc8f00efe9cbd0df76" [label="aws_security_group.private_sg" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+		"9c6cf7ae3cbf4b5d920a0a3c881d62dd" [label="aws_security_group.public_sg" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	}
+	subgraph "cluster_module.subnets" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="module.subnets" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		f2eccaab4ccb4566a6c189a1b4207092 [label="aws_subnet.private" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+		"0097d4189a9042beaa69885c66f74a82" [label="aws_subnet.public" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	}
+	subgraph "cluster_module.vpc" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="module.vpc" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"12740b25534d4ac3b0645e94522ef79f" [label="aws_internet_gateway.igw" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+		aa93d2783d3047cdb3ccfe537a8a7272 [label="aws_vpc.this" height=1.9 image="/home/gbieor/Desktop/projects/DevOps/terraform/vpc-infra/venv/lib/python3.12/site-packages/resources/generic/blank/blank.png" shape=none]
+	}
+	c62d0441523a419eb11c9c62e63a441d -> "19c299513302433b80b0a6e3df1defbc" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	c62d0441523a419eb11c9c62e63a441d -> "5730d8a09f8b46bc8f00efe9cbd0df76" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	c62d0441523a419eb11c9c62e63a441d -> f2eccaab4ccb4566a6c189a1b4207092 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"9fb2c0d1fdf54e41baa91d938f6ea2a6" -> "19c299513302433b80b0a6e3df1defbc" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"9fb2c0d1fdf54e41baa91d938f6ea2a6" -> "9c6cf7ae3cbf4b5d920a0a3c881d62dd" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"9fb2c0d1fdf54e41baa91d938f6ea2a6" -> "0097d4189a9042beaa69885c66f74a82" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"5d7d48cd5b884cc08e2d896256c1fe10" -> "763dff426ce64f2c96419ea51194b417" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	df95292b66394183827eb4d152177c43 -> "12740b25534d4ac3b0645e94522ef79f" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ccf4deecb5694a4a9d1c265c3dd1941c -> "5d7d48cd5b884cc08e2d896256c1fe10" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	ccf4deecb5694a4a9d1c265c3dd1941c -> f2eccaab4ccb4566a6c189a1b4207092 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	be1577eb46e24a4ea953e57fbe88d8c1 -> df95292b66394183827eb4d152177c43 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	be1577eb46e24a4ea953e57fbe88d8c1 -> "0097d4189a9042beaa69885c66f74a82" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"763dff426ce64f2c96419ea51194b417" -> c883985b9e7144508b0007093129f7c1 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"763dff426ce64f2c96419ea51194b417" -> "0097d4189a9042beaa69885c66f74a82" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"5730d8a09f8b46bc8f00efe9cbd0df76" -> "9c6cf7ae3cbf4b5d920a0a3c881d62dd" [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"9c6cf7ae3cbf4b5d920a0a3c881d62dd" -> aa93d2783d3047cdb3ccfe537a8a7272 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	f2eccaab4ccb4566a6c189a1b4207092 -> aa93d2783d3047cdb3ccfe537a8a7272 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"0097d4189a9042beaa69885c66f74a82" -> aa93d2783d3047cdb3ccfe537a8a7272 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+	"12740b25534d4ac3b0645e94522ef79f" -> aa93d2783d3047cdb3ccfe537a8a7272 [dir=forward fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13]
+}

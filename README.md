@@ -4,13 +4,18 @@ This project provides a modular and reusable Terraform configuration for creatin
 
 ## Architecture
 
-The infrastructure includes:
-- VPC with public and private subnets across multiple availability zones
-- Internet Gateway for public subnet connectivity
-- NAT Gateway for private subnet internet access
-- Security groups for EC2 instances
-- Route tables for subnet routing
-- EC2 instances in both public and private subnets
+This infrastructure deploys a production-grade, highly available VPC setup across multiple availability zones. Key components include:
+
+- VPC spanning multiple AZs.
+- Public subnets for internet-facing services.
+- Private subnets for internal resources like databases.
+- Route tables associated with appropriate subnets.
+- Application & Database security groups enforcing least-privilege access.
+- Internet Gateway for public subnet access.
+- NAT Gateway for controlled internet access from private subnets.
+- Application Load Balancer for routing inbound traffic to EC2 instances.
+- EC2 application instances behind an application security group.
+- RDS (Primary & Secondary) deployed in private subnets for data persistence and high availability.
 
 ![Architecture Diagram](assets/architectural_diagram.png)
 
@@ -168,29 +173,6 @@ The configuration provides the following outputs:
 - NAT Gateway ID
 - Security group IDs
 - EC2 instance IDs and public IPs
-
-## Best Practices
-
-1. **State Management**:
-   - Use remote state storage
-   - Enable state locking
-   - Implement state file encryption
-
-2. **Security**:
-   - Use private subnets for sensitive resources
-   - Implement least privilege security groups
-   - Enable VPC flow logs
-   - Use AWS KMS for encryption
-
-3. **Cost Management**:
-   - Monitor NAT Gateway costs
-   - Use appropriate instance types
-   - Implement auto-scaling where needed
-
-4. **Maintenance**:
-   - Regular security updates
-   - Cost optimization reviews
-   - Performance monitoring
 
 ## Cleanup
 

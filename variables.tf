@@ -49,3 +49,44 @@ variable "associate_public_ip_address" {
   type        = bool
   default     = false
 }
+
+variable "db_name" {
+  description = "Name of the database"
+  type        = string
+}
+
+variable "engine" {
+  description = "Engine of the database"
+  type        = string
+}
+
+variable "engine_version" {
+  description = "Version of the database engine"
+  type        = string
+}
+
+variable "instance_class" {
+  description = "Instance class of the database"
+  type        = string
+}
+
+variable "username" {
+  description = "Username of the database"
+  type        = string
+}
+
+variable "password" {
+  description = "Password of the database"
+  type        = string
+  sensitive   = true
+}
+
+variable "backup_retention_period" {
+  description = "Backup retention period of the database"
+  type        = number
+}
+
+variable "target_group_arns" {
+  description = "Target group ARNs"
+  type        = list(string)
+}

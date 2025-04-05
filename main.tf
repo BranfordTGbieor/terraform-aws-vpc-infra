@@ -57,16 +57,41 @@ module "ec2_public" {
   }, var.common_tags)
 }
 
-module "ec2_private" {
-  source                      = "./modules/ec2"
-  ami_id                      = local.ami_id
-  instance_type               = local.instance_type
-  subnet_id                   = element(module.subnets.private_subnet_ids, 0)
-  vpc_security_group_ids      = [module.security_groups.private_sg_id]
-  associate_public_ip_address = var.associate_public_ip_address
-  common_tags = merge({
-    Name = "${var.vpc_name}-private-instance"
-  }, var.common_tags)
+module "alb" {
+  source                = "./modules/alb"
+  vpc_id                = module.vpc.vpc_id
+  subnet_ids            = element(module.subnets.public_subnet_ids, 0)
+  name                  = "${var.vpc_name}-alb"
+  common_tags           = var.common_tags
+  alb_security_group_id = module.security_groups.alb_sg_id # TODO: add alb security group to sg module.
+}
+
+module "autoscaling" {
+  source                = "./modules/autoscaling"
+  vpc_id                = module.vpc.vpc_id
+  subnet_ids            = element(module.subnets.public_subnet_ids, 0)
+  alb_security_group_id = module.security_groups.alb_sg_id # TODO: add alb security group to sg module.
+  app_security_group_id = [module.security_groups.public_sg_id]
+  ami_id                = local.ami_id
+  instance_type         = local.instance_type
+  name                  = "${var.vpc_name}-autoscaling"
+  target_group_arns     = var.target_group_arns
+  common_tags           = var.common_tags
+}
+
+module "rds" {
+  source                     = "./modules/rds"
+  db_name                    = var.db_name
+  engine                     = var.engine
+  engine_version             = var.engine_version
+  instance_class             = var.instance_class
+  username                   = var.username
+  password                   = var.password
+  backup_retention_period    = var.backup_retention_period
+  database_security_group_id = [module.security_groups.private_sg_id]
+  vpc_id                     = module.vpc.vpc_id
+  subnet_ids                 = element(module.subnets.private_subnet_ids, 0)
+  common_tags                = var.common_tags
 }
 
 resource "aws_route_table" "public" {

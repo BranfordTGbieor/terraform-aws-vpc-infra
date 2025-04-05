@@ -1,5 +1,5 @@
-resource "aws_security_group" "public_sg" {
-  name        = "${var.vpc_name}-public-sg"
+resource "aws_security_group" "application_sg" {
+  name        = "${var.vpc_name}-application-sg"
   description = "Security group for public instances"
   vpc_id      = var.vpc_id
 
@@ -26,20 +26,19 @@ resource "aws_security_group" "public_sg" {
   }
 
   tags = merge({
-    Name = "${var.vpc_name}-public-sg"
+    Name = "${var.vpc_name}-application-sg"
   }, var.common_tags)
 }
 
-resource "aws_security_group" "private_sg" {
-  name        = "${var.vpc_name}-private-sg"
+resource "aws_security_group" "database_sg" {
+  name        = "${var.vpc_name}-database-sg"
   description = "Security group for private instances"
   vpc_id      = var.vpc_id
-
   ingress {
-    from_port       = 22
-    to_port         = 22
+    from_port       = 3306
+    to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.public_sg.id]
+    security_groups = [aws_security_group.application_sg.id]
   }
 
   egress {
@@ -50,6 +49,6 @@ resource "aws_security_group" "private_sg" {
   }
 
   tags = merge({
-    Name = "${var.vpc_name}-private-sg"
+    Name = "${var.vpc_name}-database-sg"
   }, var.common_tags)
 }

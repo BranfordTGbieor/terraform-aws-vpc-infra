@@ -85,8 +85,3 @@ variable "backup_retention_period" {
   description = "Backup retention period of the database"
   type        = number
 }
-
-variable "target_group_arns" {
-  description = "Target group ARNs"
-  type        = list(string)
-}

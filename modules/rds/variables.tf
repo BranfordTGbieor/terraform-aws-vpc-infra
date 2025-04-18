@@ -57,3 +57,14 @@ variable "database_security_group_id" {
   description = "Security group ID of the database"
   type        = list(string)
 }
+
+variable "application_security_group_id" {
+  description = "Security group ID of the application instances"
+  type        = string
+}
+
+variable "multi_az" {
+  description = "Enable Multi-AZ deployment for high availability"
+  type        = bool
+  default     = false
+}

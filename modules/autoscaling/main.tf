@@ -41,8 +41,8 @@ resource "aws_launch_template" "app" {
               systemctl enable httpd
               
               # Create a simple index page with instance metadata
-              INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
-              AVAILABILITY_ZONE=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+              INSTANCE_ID=$${curl -s http://169.254.169.254/latest/meta-data/instance-id}
+              AVAILABILITY_ZONE=$${curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone}
               
               cat <<HTML > /var/www/html/index.html
               <!DOCTYPE html>
@@ -72,9 +72,9 @@ resource "aws_launch_template" "app" {
                   <div class="container">
                       <h1>Hello from AWS EC2!</h1>
                       <div class="info">
-                          <p><strong>Instance ID:</strong> \${INSTANCE_ID}</p>
-                          <p><strong>Availability Zone:</strong> \${AVAILABILITY_ZONE}</p>
-                          <p><strong>Server Time:</strong> \$(date)</p>
+                          <p><strong>Instance ID:</strong> $${INSTANCE_ID}</p>
+                          <p><strong>Availability Zone:</strong> $${AVAILABILITY_ZONE}</p>
+                          <p><strong>Server Time:</strong> $$(date)</p>
                       </div>
                   </div>
               </body>

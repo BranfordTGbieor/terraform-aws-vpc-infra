@@ -26,6 +26,7 @@ variable "common_tags" {
 }
 
 variable "alb_security_group_id" {
-  description = "Security group ID of the Application Load Balancer"
+  description = "Security group ID for ALB (optional - ALB creates its own if not specified)"
   type        = list(string)
+  default     = []
 }

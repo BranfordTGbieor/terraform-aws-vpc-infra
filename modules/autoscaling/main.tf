@@ -8,6 +8,7 @@ resource "aws_security_group" "app" {
     to_port         = 80
     protocol        = "tcp"
     security_groups = [var.alb_security_group_id]
+    description     = "Allow HTTP traffic from ALB"
   }
 
   egress {
@@ -15,6 +16,7 @@ resource "aws_security_group" "app" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all outbound traffic"
   }
 
   tags = var.common_tags
@@ -32,18 +34,35 @@ resource "aws_launch_template" "app" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
+
+              # Setup logging
+              exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
+              echo "[$(date)] Starting user data script..."
+
               # Update system packages
+              echo "[$(date)] Updating system packages..."
               yum update -y
               
-              # Install Apache
-              yum install -y httpd
+              # Install Apache and tools
+              echo "[$(date)] Installing Apache and tools..."
+              yum install -y httpd curl
+              
+              # Configure and start Apache
+              echo "[$(date)] Configuring Apache..."
               systemctl start httpd
               systemctl enable httpd
               
-              # Create a simple index page with instance metadata
+              # Verify Apache is running
+              echo "[$(date)] Verifying Apache status..."
+              systemctl status httpd
+              
+              # Fetch instance metadata
+              echo "[$(date)] Fetching instance metadata..."
               INSTANCE_ID=$${curl -s http://169.254.169.254/latest/meta-data/instance-id}
               AVAILABILITY_ZONE=$${curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone}
               
+              # Create web content
+              echo "[$(date)] Creating web content..."
               cat <<HTML > /var/www/html/index.html
               <!DOCTYPE html>
               <html>
@@ -81,13 +100,29 @@ resource "aws_launch_template" "app" {
               </html>
               HTML
               
-              # Ensure proper permissions
+              # Set permissions
+              echo "[$(date)] Setting permissions..."
               chown -R apache:apache /var/www/html
               chmod -R 755 /var/www/html
+
+              # Final Apache check
+              echo "[$(date)] Testing Apache..."
+              curl -s -o /dev/null -w "HTTP Response Code: %%{http_code}\n" http://localhost/
+              
+              echo "[$(date)] User data script completed successfully"
               EOF
   )
 
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   tags = var.common_tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_autoscaling_group" "app" {

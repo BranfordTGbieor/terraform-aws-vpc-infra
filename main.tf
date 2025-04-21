@@ -47,14 +47,14 @@ module "alb" {
   subnet_ids            = module.subnets.public_subnet_ids
   name                  = "${var.vpc_name}-alb"
   common_tags           = var.common_tags
-  alb_security_group_id = [module.security_groups.alb_sg_id]
+  alb_security_group_id = []
 }
 
 module "autoscaling" {
   source                = "./modules/autoscaling"
   vpc_id                = module.vpc.vpc_id
   subnet_ids            = module.subnets.public_subnet_ids
-  alb_security_group_id = module.security_groups.alb_sg_id
+  alb_security_group_id = module.alb.security_group_id
   app_security_group_id = [module.security_groups.public_sg_id]
   ami_id                = local.ami_id
   instance_type         = local.instance_type

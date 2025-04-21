@@ -106,6 +106,39 @@ aws-vpc-terraform/
 - Automatic failover capability
 - Backup and recovery features
 
+## Testing the Infrastructure 🧪
+
+### 1. Load Balancer Test
+```bash
+# Get the ALB DNS name
+terraform output alb_dns_name
+
+# Open in browser or use curl
+curl http://<alb_dns_name>
+```
+Expected: HTML page showing instance metadata. Refresh to see responses from different instances.
+
+### 2. Auto Scaling Test
+```bash
+# Check current instances
+aws ec2 describe-instances --filters "Name=tag:Name,Values=my-vpc-autoscaling*" --query 'Reservations[].Instances[].InstanceId'
+
+# Simulate load (replace <alb_dns_name> with actual DNS)
+ab -n 10000 -c 100 http://<alb_dns_name>/
+```
+Watch AWS Console → EC2 → Auto Scaling Groups to observe scaling.
+
+### 3. Health Check Status
+```bash
+# View target group health
+aws elbv2 describe-target-health --target-group-arn $(terraform output -raw alb_target_group_arn)
+```
+
+### 4. Logs and Monitoring 📊
+- Check instance logs: `/var/log/user-data.log`
+- ALB Access Logs: Available in CloudWatch
+- Auto Scaling events: AWS Console → EC2 → Auto Scaling Groups → Activity
+
 ## Cleanup 🧹
 
 To destroy the infrastructure:

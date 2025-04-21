@@ -4,12 +4,12 @@ output "alb_arn" {
 }
 
 output "target_group_arn" {
-  description = "Target group ARN"
+  description = "ARN of the target group"
   value       = aws_lb_target_group.app.arn
 }
 
 output "alb_dns_name" {
-  description = "ALB DNS name"
+  description = "DNS name of the Application Load Balancer"
   value       = aws_lb.alb.dns_name
 }
 

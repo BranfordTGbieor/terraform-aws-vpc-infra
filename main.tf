@@ -41,25 +41,6 @@ module "security_groups" {
   common_tags = var.common_tags
 }
 
-module "ec2_public" {
-  source                      = "./modules/ec2"
-  ami_id                      = local.ami_id
-  instance_type               = local.instance_type
-  subnet_id                   = element(module.subnets.public_subnet_ids, 0)
-  vpc_security_group_ids      = [module.security_groups.public_sg_id]
-  associate_public_ip_address = true
-  user_data                   = <<EOF
-                                #!/bin/bash
-                                sudo yum update -y
-                                sudo yum install -y httpd
-                                sudo systemctl start httpd
-                                sudo systemctl enable httpd
-                                EOF
-  common_tags = merge({
-    Name = "${var.vpc_name}-public-instance"
-  }, var.common_tags)
-}
-
 module "alb" {
   source                = "./modules/alb"
   vpc_id                = module.vpc.vpc_id

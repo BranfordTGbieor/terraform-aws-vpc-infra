@@ -5,18 +5,18 @@
 This project provides a modular and reusable Terraform configuration for creating a production-grade AWS VPC infrastructure with high availability and security best practices. 🛡️
 
 ## Table of Contents 📑
-- [Prerequisites](#prerequisites)
-- [Features](#features)
-- [Logical Flow](#logical-flow)
-- [Architecture](#architecture)
-- [Key Components](#key-components)
-- [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
-- [Testing the Infrastructure](#testing-the-infrastructure)
-- [Cleanup](#cleanup)
-- [Contributing](#contributing)
-- [Support](#support)
-- [License](#license)
+- [Prerequisites 📋](#prerequisites-)
+- [Features ✨](#features-)
+- [Logical Flow 🔄](#logical-flow-)
+- [Architecture 🏗️](#architecture-)
+- [Key Components 🔑](#key-components-)
+- [Project Structure 📁](#project-structure-)
+- [Quick Start 🚀](#quick-start-)
+- [Testing the Infrastructure 🧪](#testing-the-infrastructure-)
+- [Cleanup 🧹](#cleanup-)
+- [Contributing 🤝](#contributing-)
+- [Support 💬](#support-)
+- [License 📄](#license-)
 
 ## Prerequisites 📋
 

@@ -1,30 +1,22 @@
 # AWS VPC Infrastructure with Terraform 🚀
 
-## Table of Contents 📑
-- [Overview](#overview)
-- [Prerequisites](#prerequisites-)
-- [Features](#features-)
-- [Logical Flow](#logical-flow-)
-- [Architecture](#architecture-)
-- [Key Components](#key-components-)
-- [Project Structure](#project-structure-)
-- [Quick Start](#quick-start-)
-- [Testing the Infrastructure](#testing-the-infrastructure-)
-- [Cleanup](#cleanup-)
-- [Contributing](#contributing-)
-- [Support](#support-)
-- [License](#license-)
-
 ## Overview 🌟
 
 This project provides a modular and reusable Terraform configuration for creating a production-grade AWS VPC infrastructure with high availability and security best practices. 🛡️
 
-Key benefits:
-- **Production-Ready**: Designed for enterprise-grade deployments with high availability and security
-- **Modular**: Each component is independently configurable and reusable
-- **Scalable**: Built-in support for auto-scaling and load balancing
-- **Secure**: Implements AWS best practices for network security
-- **Cost-Effective**: Optimized resource allocation with configurable options
+## Table of Contents 📑
+- [Prerequisites](#prerequisites)
+- [Features](#features)
+- [Logical Flow](#logical-flow)
+- [Architecture](#architecture)
+- [Key Components](#key-components)
+- [Project Structure](#project-structure)
+- [Quick Start](#quick-start)
+- [Testing the Infrastructure](#testing-the-infrastructure)
+- [Cleanup](#cleanup)
+- [Contributing](#contributing)
+- [Support](#support)
+- [License](#license)
 
 ## Prerequisites 📋
 
